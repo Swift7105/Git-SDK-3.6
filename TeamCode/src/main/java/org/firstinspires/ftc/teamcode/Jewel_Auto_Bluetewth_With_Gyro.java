@@ -346,7 +346,7 @@ public class Jewel_Auto_Bluetewth_With_Gyro extends LinearOpMode {
             //backwards
             DriveEncoder(.25, 60, .25, 60);
             //turn right
-            DriveEncoder(.25, 85, .25, -85);
+            DriveEncoder(.25, 87, .25, -87);
             //forwards
             robot.backleftMotor.setPower(-0.5);
             robot.backrightMotor.setPower(-0.5);
@@ -367,7 +367,7 @@ public class Jewel_Auto_Bluetewth_With_Gyro extends LinearOpMode {
             //turn
             DriveEncoder(.25, 50, .25, -50);
             //forward
-            DriveEncoder(.25, -25, .25, -25);
+            DriveEncoder(.25, -28, .25, -28);
             //turn
             DriveEncoder(.25,50,.25,-50);
             //forward
@@ -388,7 +388,7 @@ public class Jewel_Auto_Bluetewth_With_Gyro extends LinearOpMode {
             //turn
             DriveEncoder(.25, 50, .25, -50);
             //forward
-            DriveEncoder(.25, -45, .25, -45);
+            DriveEncoder(.25, -50, .25, -50);
             //turn
             DriveEncoder(.25,50,.25,-50);
             //forwardf

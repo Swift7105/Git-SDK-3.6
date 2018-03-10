@@ -344,7 +344,7 @@ public class Jewel_Auto_Red_With_Encoder extends LinearOpMode {
 
                 telemetry.addData("Status", "Going LEFT");
                 //forward
-                DriveEncoder(.25, -109, .25, -109);
+                DriveEncoder(.25, -105, .25, -105);
                 //turn
                 DriveEncoder(.25, -50, .25, 50);
                 //forward

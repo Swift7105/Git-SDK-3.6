@@ -349,7 +349,7 @@ public class Jewel_Auto_Red_2_With_Encoder extends LinearOpMode {
                 //turn
                 DriveEncoder(.25, 50, .25, -50);
                 //forward
-                DriveEncoder(.25,-40,.25,-40);
+                DriveEncoder(.25,-48,.25,-48);
                 //turn
                 DriveEncoder(.25, -53, .25, 53);
                 //forward
@@ -361,7 +361,7 @@ public class Jewel_Auto_Red_2_With_Encoder extends LinearOpMode {
                 robot.intakeright.setPower(.75);
                 sleep(500);
                 //backwards
-                DriveEncoder(.25, 16, .25, 16);
+                DriveEncoder(.25, 21, .25, 21);
 
 
             }
@@ -374,7 +374,7 @@ public class Jewel_Auto_Red_2_With_Encoder extends LinearOpMode {
                 //turn
                 DriveEncoder(.25, 50, .25, -50);
                 //forward
-                DriveEncoder(.25,-30,.25,-30);
+                DriveEncoder(.25,-40,.25,-40);
                 //turn
                 DriveEncoder(.25, -53, .25, 53);
                 //forward
@@ -395,15 +395,24 @@ public class Jewel_Auto_Red_2_With_Encoder extends LinearOpMode {
             if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 telemetry.addData("Status", "Going RIGHT");
                 //forward
-                robot.backleftMotor.setPower(-0.25);
-                robot.backrightMotor.setPower(-0.25);
-                robot.frontleftMotor.setPower(-0.25);
-                robot.frontrightMotor.setPower(-0.25);
-                sleep(1500);
+                DriveEncoder(.25, -55, .25, -55);
+                //turn
+                DriveEncoder(.25, 50, .25, -50);
+                //forward
+                DriveEncoder(.25,-10,.25,-10);
+                //turn
+                DriveEncoder(.25, -53, .25, 53);
+                //forward
+                robot.backleftMotor.setPower(-0.5);
+                robot.backrightMotor.setPower(-0.5);
+                robot.frontleftMotor.setPower(-0.5);
+                robot.frontrightMotor.setPower(-0.5);
+                sleep(1000);
                 robot.intakeright.setPower(.75);
                 sleep(500);
                 //backwards
-                DriveEncoder(.25, 25, .25, 25);
+                DriveEncoder(.25, 16, .25, 16);
+
 
             }
 
