@@ -36,6 +36,7 @@ import android.view.View;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -83,9 +84,9 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Jewel Auto Blue Encoder", group="Pushbot")
-//@Disabled
-public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
+@Autonomous(name="Pushbot: Jewel Auto Red Encoder Dual Block", group="Pushbot")
+@Disabled
+public class Jewel_Auto_Red_With_Encoder_Dual_Block extends LinearOpMode {
 
 
     public static final String TAG = "Vuforia VuMark Sample";
@@ -311,17 +312,15 @@ public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
         sleep(1000);
 
         //----------------------
-        if (looking = true)  {
-            if (sensorColor.red() > sensorColor.blue()) {
+        if (looking = true) {
+            if (sensorColor.blue() > sensorColor.red()) {
                 robot.jewelTwist.setPosition(0.2);
                 sleep(500);
                 robot.jewelTwist.setPosition(.68);
                 robot.jewelarm.setPosition(0.9);
                 sleep(500);
                 looking = false;
-
-
-            } else if (sensorColor.blue() > sensorColor.red())
+            } else if (sensorColor.red() > sensorColor.blue()) {
                 robot.jewelTwist.setPosition(0.9);
                 sleep(500);
                 robot.jewelarm.setPosition(0.9);
@@ -333,83 +332,153 @@ public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
 
             //--------------------------------
 
-        robot.jewelTwist.setPosition(0.2);
-        sleep(500);
-
-
-        if (vuMark == RelicRecoveryVuMark.UNKNOWN){
-
-        }
-
-        if (vuMark == RelicRecoveryVuMark.LEFT){
-
-            telemetry.addData("Status","Going LEFT");
-            //forward
-            DriveEncoder(.25,65,.25,65);
-            //turn left
-            DriveEncoder(.25, -50,.25,50);
-            //forward
-            robot.backleftMotor.setPower(-0.5);
-            robot.backrightMotor.setPower(-0.5);
-            robot.frontleftMotor.setPower(-0.5);
-            robot.frontrightMotor.setPower(-0.5);
-            sleep(1000);
-            robot.intakeright.setPower(.75);
             sleep(500);
-            //back out
-            DriveEncoder(.25,21,.25,21);
-            robot.intakeright.setPower(0);
-        }
-
-        if (vuMark == RelicRecoveryVuMark.CENTER) {
-
-            telemetry.addData("Status","Going Center");
-            //forward
-            DriveEncoder(.25,  90, .25, 90);
-            //turn left
-            DriveEncoder(.25, -45, .25, 45);
-
-            //forward
-            robot.backleftMotor.setPower(-0.5);
-            robot.backrightMotor.setPower(-0.5);
-            robot.frontleftMotor.setPower(-0.5);
-            robot.frontrightMotor.setPower(-0.5);
-            sleep(1000);
-            robot.intakeright.setPower(.75);
+            robot.jewelTwist.setPosition(0.2);
             sleep(500);
-            //back out
-            DriveEncoder(.25, 16, .25, 16);
-        }
 
-        if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            telemetry.addData("Status","Going RIGHT");
-            //forward
-            DriveEncoder(.25, 100, .25, 100);
-            //turn left
-            DriveEncoder(.25, -50, .25, 50);
-            //forward
-            robot.backleftMotor.setPower(-0.5);
-            robot.backrightMotor.setPower(-0.5);
-            robot.frontleftMotor.setPower(-0.5);
-            robot.frontrightMotor.setPower(-0.5);
-            sleep(1000);
-            robot.intakeright.setPower(.75);
+
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+
+            }
+
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+
+                telemetry.addData("Status", "Going LEFT");
+                //forward
+                DriveEncoder(.25, -105, .25, -105);
+                //turn
+                DriveEncoder(.25, -50, .25, 50);
+                //forward
+                robot.backleftMotor.setPower(-0.5);
+                robot.backrightMotor.setPower(-0.5);
+                robot.frontleftMotor.setPower(-0.5);
+                robot.frontrightMotor.setPower(-0.5);
+                sleep(1000);
+                robot.intakeright.setPower(.75);
+                sleep(500);
+                //backwards
+                DriveEncoder(.25, 25, .25, 25);
+
+
+                DriveEncoder(0.35,-100,0.35,100);
+                robot.lift.setPower(0.5);
+                sleep(500);
+                robot.frontclaw.setPosition(0.01);
+                robot.backclaw.setPosition(0.99);
+                robot.bigclaw.setPosition(0.99);
+                robot.intakeright.setPower(-0.75);
+                DriveEncoder(0.25,-35,0.25,-35);
+                robot.lift.setPower(-0.25);
+                sleep(250);
+                robot.frontclaw.setPosition(0.99);
+                robot.backclaw.setPosition(0.01);
+                robot.bigclaw.setPosition(0.01);
+                DriveEncoder(0.35,-100,0.35,100);
+                robot.backleftMotor.setPower(-0.5);
+                robot.backrightMotor.setPower(-0.5);
+                robot.frontleftMotor.setPower(-0.5);
+                robot.frontrightMotor.setPower(-0.5);
+                sleep(1000);
+                robot.intakeright.setPower(.75);
+                sleep(500);
+                //back out
+                DriveEncoder(.25,21,.25,21);
+            }
+
+            if (vuMark == RelicRecoveryVuMark.CENTER) {
+
+                telemetry.addData("Status", "Going Center");
+                //forward
+                DriveEncoder(.25, -93, .25, -93);
+                //turn
+                DriveEncoder(.25, -55, .25, 55);
+                //forward
+                robot.backleftMotor.setPower(-0.5);
+                robot.backrightMotor.setPower(-0.5);
+                robot.frontleftMotor.setPower(-0.5);
+                robot.frontrightMotor.setPower(-0.5);
+                sleep(1000);
+                robot.intakeright.setPower(.75);
+                sleep(500);
+                //backwards
+                DriveEncoder(.25, 25, .25, 25);
+
+
+                DriveEncoder(0.35,-100,0.35,100);
+                robot.lift.setPower(0.5);
+                sleep(500);
+                robot.frontclaw.setPosition(0.01);
+                robot.backclaw.setPosition(0.99);
+                robot.bigclaw.setPosition(0.99);
+                robot.intakeright.setPower(-0.75);
+                DriveEncoder(0.25,-35,0.25,-35);
+                robot.lift.setPower(-0.25);
+                sleep(250);
+                robot.frontclaw.setPosition(0.99);
+                robot.backclaw.setPosition(0.01);
+                robot.bigclaw.setPosition(0.01);
+                DriveEncoder(0.35,-100,0.35,100);
+                robot.backleftMotor.setPower(-0.5);
+                robot.backrightMotor.setPower(-0.5);
+                robot.frontleftMotor.setPower(-0.5);
+                robot.frontrightMotor.setPower(-0.5);
+                sleep(1000);
+                robot.intakeright.setPower(.75);
+                sleep(500);
+                //back out
+                DriveEncoder(.25,21,.25,21);
+            }
+
+            if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                telemetry.addData("Status", "Going RIGHT");
+                //forward
+                DriveEncoder(.25, -67, .25, -67);
+                //turn
+                DriveEncoder(.25, -50, .25, 50);
+                //forward
+                robot.backleftMotor.setPower(-0.5);
+                robot.backrightMotor.setPower(-0.5);
+                robot.frontleftMotor.setPower(-0.5);
+                robot.frontrightMotor.setPower(-0.5);
+                sleep(1000);
+                robot.intakeright.setPower(.75);
+                sleep(500);
+                DriveEncoder(.25, 25, .25, 25);
+
+
+                DriveEncoder(0.35,-100,0.35,100);
+                robot.lift.setPower(0.5);
+                sleep(500);
+                robot.frontclaw.setPosition(0.01);
+                robot.backclaw.setPosition(0.99);
+                robot.bigclaw.setPosition(0.99);
+                robot.intakeright.setPower(-0.75);
+                DriveEncoder(0.25,-35,0.25,-35);
+                robot.lift.setPower(-0.25);
+                sleep(250);
+                robot.frontclaw.setPosition(0.99);
+                robot.backclaw.setPosition(0.01);
+                robot.bigclaw.setPosition(0.01);
+                DriveEncoder(0.35,-100,0.35,100);
+                robot.backleftMotor.setPower(-0.5);
+                robot.backrightMotor.setPower(-0.5);
+                robot.frontleftMotor.setPower(-0.5);
+                robot.frontrightMotor.setPower(-0.5);
+                sleep(1000);
+                robot.intakeright.setPower(.75);
+                sleep(500);
+                //back out
+                DriveEncoder(.25,21,.25,21);
+
+            }
+
+
+            // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
+
+
+            telemetry.update();
             sleep(500);
-            //back out
-            DriveEncoder(.25, 25, .25, 25);
-
         }
-
-
-
-
-
-
-        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-
-
-        telemetry.update();
-        sleep(500);
     }
 
 

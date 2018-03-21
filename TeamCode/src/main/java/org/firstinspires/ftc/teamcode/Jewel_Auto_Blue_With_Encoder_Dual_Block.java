@@ -36,6 +36,7 @@ import android.view.View;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -344,24 +345,46 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.LEFT){
 
             telemetry.addData("Status","Going LEFT");
-            DriveEncoder(.25,82,.25,82);
+            //forward
+            DriveEncoder(.35,65,.35,65);
+            //turn left
+            DriveEncoder(.35, -50,.35,50);
+            //forward
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
+            robot.intakeright.setPower(.75);
+            sleep(500);
+            //back out
+            DriveEncoder(.25,21,.25,21);
+            robot.intakeright.setPower(0);
 
-            DriveEncoder(.25, -38,.25,38);
-            DriveEncoder(.25,-37,.25,-37);
-            robot.intakeright.setPower(.5);
-            DriveEncoder(.75,22,.75,22);
-            DriveEncoder(.75,-15,.75,-15);
-            //second block
-            DriveEncoder(.25,15,.25,15);
-            DriveEncoder(.75, -46,0.75,-46);
-            robot.intakeright.setPower(-.5);
-            DriveEncoder(.25,-15,0.25,-15);
-            DriveEncoder(.25,15,0.25,15);
-            DriveEncoder(.75, -43,0.75,-43);
-            DriveEncoder(.75,-15,.75,-15);
-            robot.intakeright.setPower(.5);
-            DriveEncoder(0.75,15,0.75,15);
 
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.lift.setPower(0.5);
+            sleep(500);
+            robot.frontclaw.setPosition(0.01);
+            robot.backclaw.setPosition(0.99);
+            robot.bigclaw.setPosition(0.99);
+            robot.intakeright.setPower(-0.75);
+            DriveEncoder(0.25,-35,0.25,-35);
+            robot.lift.setPower(-0.25);
+            sleep(250);
+            robot.frontclaw.setPosition(0.99);
+            robot.backclaw.setPosition(0.01);
+            robot.bigclaw.setPosition(0.01);
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
+            robot.intakeright.setPower(.75);
+            sleep(500);
+            //back out
+            DriveEncoder(.25,21,.25,21);
 
 
         }
@@ -369,22 +392,88 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.CENTER) {
 
             telemetry.addData("Status","Going Center");
+            //forward
             DriveEncoder(.25,  90, .25, 90);
+            //turn left
             DriveEncoder(.25, -45, .25, 45);
 
-            DriveEncoder(.25, -45, .25, -45);
-            robot.intakeright.setPower(75);
-            DriveEncoder(.75, 16, .75, 16);
+            //forward
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
+            robot.intakeright.setPower(.75);
+            sleep(500);
+            //back out
+            DriveEncoder(.25, 16, .25, 16);
+
+
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.lift.setPower(0.5);
+            sleep(500);
+            robot.frontclaw.setPosition(0.01);
+            robot.backclaw.setPosition(0.99);
+            robot.bigclaw.setPosition(0.99);
+            robot.intakeright.setPower(-0.75);
+            DriveEncoder(0.25,-35,0.25,-35);
+            robot.lift.setPower(-0.25);
+            sleep(250);
+            robot.frontclaw.setPosition(0.99);
+            robot.backclaw.setPosition(0.01);
+            robot.bigclaw.setPosition(0.01);
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
+            robot.intakeright.setPower(.75);
+            sleep(500);
+            //back out
+            DriveEncoder(.25,21,.25,21);
         }
 
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("Status","Going RIGHT");
+            //forward
             DriveEncoder(.25, 100, .25, 100);
+            //turn left
             DriveEncoder(.25, -50, .25, 50);
-
-            DriveEncoder(.25, -33, .25, -33);
+            //forward
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
             robot.intakeright.setPower(.75);
+            sleep(500);
+            //back out
             DriveEncoder(.25, 25, .25, 25);
+
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.lift.setPower(0.5);
+            sleep(500);
+            robot.frontclaw.setPosition(0.01);
+            robot.backclaw.setPosition(0.99);
+            robot.bigclaw.setPosition(0.99);
+            robot.intakeright.setPower(-0.75);
+            DriveEncoder(0.25,-35,0.25,-35);
+            robot.lift.setPower(-0.25);
+            sleep(250);
+            robot.frontclaw.setPosition(0.99);
+            robot.backclaw.setPosition(0.01);
+            robot.bigclaw.setPosition(0.01);
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
+            robot.intakeright.setPower(.75);
+            sleep(500);
+            //back out
+            DriveEncoder(.25,21,.25,21);
 
         }
 

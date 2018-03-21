@@ -36,6 +36,7 @@ import android.view.View;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -83,9 +84,9 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Jewel Auto Blue Encoder", group="Pushbot")
-//@Disabled
-public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
+@Autonomous(name="Pushbot: Jewel Auto Bluetewth Encoder Double Block ", group="Pushbot")
+@Disabled
+public class Jewel_Auto_Bluetewth_With_Gyro_Dual_Block extends LinearOpMode {
 
 
     public static final String TAG = "Vuforia VuMark Sample";
@@ -98,7 +99,7 @@ public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
     VuforiaLocalizer vuforia;
 
     /* Declare OpMode members. */
-   CompetitionHWsetup robot = new CompetitionHWsetup();   // Use a Pushbot's hardware
+    CompetitionHWsetup robot = new CompetitionHWsetup();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     ColorSensor sensorColor;
@@ -291,7 +292,7 @@ public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
                 (int) (sensorColor.blue() * SCALE_FACTOR),
-              hsvValues);
+                hsvValues);
 
 
 
@@ -323,32 +324,55 @@ public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
 
             } else if (sensorColor.blue() > sensorColor.red())
                 robot.jewelTwist.setPosition(0.9);
-                sleep(500);
-                robot.jewelarm.setPosition(0.9);
-                sleep(1000);
-                robot.jewelTwist.setPosition(.68);
-                sleep(500);
-                looking = false;
-            }
+            sleep(500);
+            robot.jewelarm.setPosition(0.9);
+            sleep(1000);
+            robot.jewelTwist.setPosition(.68);
+            sleep(500);
+            looking = false;
+        }
 
-            //--------------------------------
+        //--------------------------------
 
         robot.jewelTwist.setPosition(0.2);
         sleep(500);
-
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN){
 
         }
 
-        if (vuMark == RelicRecoveryVuMark.LEFT){
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
 
-            telemetry.addData("Status","Going LEFT");
-            //forward
-            DriveEncoder(.25,65,.25,65);
-            //turn left
-            DriveEncoder(.25, -50,.25,50);
-            //forward
+            telemetry.addData("Status", "Going LEFT");
+            //backwards
+            DriveEncoder(.25, 60, .25, 60);
+            //turn right
+            DriveEncoder(.25, 87, .25, -87);
+            //forwards
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
+            robot.intakeright.setPower(.75);
+            sleep(500);
+            DriveEncoder(.25, 22, .25, 22);
+            robot.intakeright.setPower(0);
+
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.lift.setPower(0.5);
+            sleep(500);
+            robot.frontclaw.setPosition(0.01);
+            robot.backclaw.setPosition(0.99);
+            robot.bigclaw.setPosition(0.99);
+            robot.intakeright.setPower(-0.75);
+            DriveEncoder(0.25,-35,0.25,-35);
+            robot.lift.setPower(-0.25);
+            sleep(250);
+            robot.frontclaw.setPosition(0.99);
+            robot.backclaw.setPosition(0.01);
+            robot.bigclaw.setPosition(0.01);
+            DriveEncoder(0.35,-100,0.35,100);
             robot.backleftMotor.setPower(-0.5);
             robot.backrightMotor.setPower(-0.5);
             robot.frontleftMotor.setPower(-0.5);
@@ -358,17 +382,19 @@ public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
             sleep(500);
             //back out
             DriveEncoder(.25,21,.25,21);
-            robot.intakeright.setPower(0);
         }
 
         if (vuMark == RelicRecoveryVuMark.CENTER) {
 
             telemetry.addData("Status","Going Center");
+            //back off stone
+            DriveEncoder(.25,  75, .25, 70);
+            //turn
+            DriveEncoder(.25, 50, .25, -50);
             //forward
-            DriveEncoder(.25,  90, .25, 90);
-            //turn left
-            DriveEncoder(.25, -45, .25, 45);
-
+            DriveEncoder(.25, -28, .25, -28);
+            //turn
+            DriveEncoder(.25,50,.25,-50);
             //forward
             robot.backleftMotor.setPower(-0.5);
             robot.backrightMotor.setPower(-0.5);
@@ -377,17 +403,69 @@ public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
             sleep(1000);
             robot.intakeright.setPower(.75);
             sleep(500);
+            DriveEncoder(.25, 23, .25, 23);
+
+
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.lift.setPower(0.5);
+            sleep(500);
+            robot.frontclaw.setPosition(0.01);
+            robot.backclaw.setPosition(0.99);
+            robot.bigclaw.setPosition(0.99);
+            robot.intakeright.setPower(-0.75);
+            DriveEncoder(0.25,-35,0.25,-35);
+            robot.lift.setPower(-0.25);
+            sleep(250);
+            robot.frontclaw.setPosition(0.99);
+            robot.backclaw.setPosition(0.01);
+            robot.bigclaw.setPosition(0.01);
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
+            robot.intakeright.setPower(.75);
+            sleep(500);
             //back out
-            DriveEncoder(.25, 16, .25, 16);
+            DriveEncoder(.25,21,.25,21);
         }
 
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("Status","Going RIGHT");
+            //back of stone
+            DriveEncoder(.25,  70, .25, 70);
+            //turn
+            DriveEncoder(.25, 50, .25, -50);
             //forward
-            DriveEncoder(.25, 100, .25, 100);
-            //turn left
-            DriveEncoder(.25, -50, .25, 50);
-            //forward
+            DriveEncoder(.25, -50, .25, -50);
+            //turn
+            DriveEncoder(.25,50,.25,-50);
+            //forwardf
+            robot.backleftMotor.setPower(-0.5);
+            robot.backrightMotor.setPower(-0.5);
+            robot.frontleftMotor.setPower(-0.5);
+            robot.frontrightMotor.setPower(-0.5);
+            sleep(1000);
+            robot.intakeright.setPower(.75);
+            sleep(500);
+            DriveEncoder(.25, 23, .25, 23);
+
+
+            DriveEncoder(0.35,-100,0.35,100);
+            robot.lift.setPower(0.5);
+            sleep(500);
+            robot.frontclaw.setPosition(0.01);
+            robot.backclaw.setPosition(0.99);
+            robot.bigclaw.setPosition(0.99);
+            robot.intakeright.setPower(-0.75);
+            DriveEncoder(0.25,-35,0.25,-35);
+            robot.lift.setPower(-0.25);
+            sleep(250);
+            robot.frontclaw.setPosition(0.99);
+            robot.backclaw.setPosition(0.01);
+            robot.bigclaw.setPosition(0.01);
+            DriveEncoder(0.35,-100,0.35,100);
             robot.backleftMotor.setPower(-0.5);
             robot.backrightMotor.setPower(-0.5);
             robot.frontleftMotor.setPower(-0.5);
@@ -396,7 +474,7 @@ public class Jewel_Auto_Blue_With_Gyro extends LinearOpMode {
             robot.intakeright.setPower(.75);
             sleep(500);
             //back out
-            DriveEncoder(.25, 25, .25, 25);
+            DriveEncoder(.25,21,.25,21);
 
         }
 

@@ -148,10 +148,12 @@ public class CompetitionDrive extends OpMode{
 
 
         if (gamepad2.y){
+            //open
             robot.frontclaw.setPosition(0.01);
             robot.backclaw.setPosition(0.99);
             robot.bigclaw.setPosition(0.99);}
         else if (gamepad2.x) {
+            //close
             robot.frontclaw.setPosition(0.99);
             robot.backclaw.setPosition(0.01);
             robot.bigclaw.setPosition(0.01);
