@@ -34,16 +34,20 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.robocol.Command;
+
+import org.firstinspires.ftc.teamcode.Macros.*;
 
 
 @TeleOp(name="Pushbot: CompetitionDrive", group="Pushbot")
 //@Disabled
 public class CompetitionDrive extends OpMode{
     int relicdistace;
-
+    public static final Macros MACROS = new Macros();
     boolean relicclaw;
     /* Declare OpMode members. */
     CompetitionHWsetup robot = new CompetitionHWsetup();// use the class created to define a Pushbot's hardware
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -149,9 +153,11 @@ public class CompetitionDrive extends OpMode{
 
         if (gamepad2.y){
             //open
-            robot.frontclaw.setPosition(0.01);
-            robot.backclaw.setPosition(0.99);
-            robot.bigclaw.setPosition(0.99);}
+          //  robot.frontclaw.setPosition(0.01)
+          // robot.backclaw.setPosition(0.99);
+          //  robot.bigclaw.setPosition(0.99);
+        MACROS.CubeArmOut();
+        }
         else if (gamepad2.x) {
             //close
             robot.frontclaw.setPosition(0.99);
@@ -184,12 +190,12 @@ public class CompetitionDrive extends OpMode{
 
 
 
-
       //  robot.relicarm.setPower(-gamepad2.right_trigger * 5);
         //robot.relicarm.setPower(gamepad2.left_trigger * 5);
 
         if ( gamepad2.dpad_up){
             robot.relicarm.setPower(1);
+
         }
 
         else if ( gamepad2.dpad_down){
