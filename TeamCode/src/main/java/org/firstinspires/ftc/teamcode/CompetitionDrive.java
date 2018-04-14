@@ -34,9 +34,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.robocol.Command;
-
-import org.firstinspires.ftc.teamcode.Macros.*;
 
 
 @TeleOp(name="Pushbot: CompetitionDrive", group="Pushbot")

@@ -39,7 +39,7 @@ public class CompetitionHWsetup
 
     public Sensor color_sensor = null;
     //public AnalogInput armsensor = null;
-    public TouchSensor armsensor = null;
+  //  public SensorDigitalTouch armsensor = null;
 
 
     /* local OpMode members. */
@@ -136,7 +136,7 @@ public class CompetitionHWsetup
 
         
 
-        armsensor = hwMap.get(TouchSensor.class, "armsensor");
+       // armsensor = hwMap.get(SensorDigitalTouch.class, "armsensor");
 
 
 
