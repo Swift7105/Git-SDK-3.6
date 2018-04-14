@@ -17,8 +17,8 @@ import static android.os.SystemClock.sleep;
 public class Macros extends Command {
     CompetitionHWsetup robot = new CompetitionHWsetup();// use the class created to define a Pushbot's hardware
 
-    public Macros() {
-        super("Macros");
+    public Macros(String name) {
+        super(name);
     }
 
 

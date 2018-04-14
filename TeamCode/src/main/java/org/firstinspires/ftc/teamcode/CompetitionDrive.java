@@ -43,8 +43,7 @@ import org.firstinspires.ftc.teamcode.Macros.*;
 //@Disabled
 public class CompetitionDrive extends OpMode{
     int relicdistace;
-    public static final Macros MACROS = new Macros();
-    boolean relicclaw;
+      boolean relicclaw;
     /* Declare OpMode members. */
     CompetitionHWsetup robot = new CompetitionHWsetup();// use the class created to define a Pushbot's hardware
 
@@ -153,10 +152,10 @@ public class CompetitionDrive extends OpMode{
 
         if (gamepad2.y){
             //open
-          //  robot.frontclaw.setPosition(0.01)
-          // robot.backclaw.setPosition(0.99);
-          //  robot.bigclaw.setPosition(0.99);
-        MACROS.CubeArmOut();
+            robot.frontclaw.setPosition(0.01);
+           robot.backclaw.setPosition(0.99);
+            robot.bigclaw.setPosition(0.99);
+
         }
         else if (gamepad2.x) {
             //close

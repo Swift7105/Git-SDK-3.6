@@ -38,6 +38,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -51,6 +52,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -103,7 +105,9 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
 
     ColorSensor sensorColor;
+    ColorSensor sensorColor2;
     DistanceSensor sensorDistance;
+    DistanceSensor sensorDistance2;
 
     // The IMU sensor object
     BNO055IMU imu;
@@ -195,9 +199,12 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
 
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        sensorColor2 = hardwareMap.get(ColorSensor.class, "sensor_color_distance2");
+
 
         // get a reference to the distance sensor that shares the same name.
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        sensorDistance2 = hardwareMap.get(DistanceSensor.class, "sensor_color_distance2");
 
 
 
@@ -230,6 +237,9 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
 
 
         boolean looking = true;
+        boolean foundblock;
+        boolean moveon;
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -294,6 +304,11 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
                 (int) (sensorColor.blue() * SCALE_FACTOR),
               hsvValues);
 
+        Color.RGBToHSV((int) (sensorColor2.red() * SCALE_FACTOR),
+                (int) (sensorColor2.green() * SCALE_FACTOR),
+                (int) (sensorColor2.blue() * SCALE_FACTOR),
+                hsvValues);
+
 
 
 
@@ -344,6 +359,8 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
 
         if (vuMark == RelicRecoveryVuMark.LEFT){
 
+            foundblock = false;
+
             telemetry.addData("Status","Going LEFT");
             //forward
             DriveEncoder(.35,65,.35,65);
@@ -355,6 +372,7 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
             robot.frontleftMotor.setPower(-0.5);
             robot.frontrightMotor.setPower(-0.5);
             sleep(1000);
+            //spit block out
             robot.intakeright.setPower(.75);
             sleep(500);
             //back out
@@ -362,40 +380,95 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
             robot.intakeright.setPower(0);
 
 
+            //back away
+            DriveEncoder(0.25,-21,0.25,-21);
+            //Turn around
             DriveEncoder(0.35,-100,0.35,100);
-            robot.lift.setPower(0.5);
-            sleep(500);
-            robot.frontclaw.setPosition(0.01);
-            robot.backclaw.setPosition(0.99);
-            robot.bigclaw.setPosition(0.99);
-            robot.intakeright.setPower(-0.75);
-            DriveEncoder(0.25,-35,0.25,-35);
-            robot.lift.setPower(-0.25);
-            sleep(250);
-            robot.frontclaw.setPosition(0.99);
-            robot.backclaw.setPosition(0.01);
-            robot.bigclaw.setPosition(0.01);
-            DriveEncoder(0.35,-100,0.35,100);
+            //drive to glyph pit
+            DriveEncoder(0.35,-40,0.35,-40);
+
+            //set a recal point
+            final int posL = robot.backleftMotor.getCurrentPosition();
+            final int posR = robot.frontrightMotor.getCurrentPosition();
+
+            //SECOND BLOCK
+            double floor = sensorDistance2.getDistance(DistanceUnit.INCH);
+
+
+            //no block in intake
+            if (sensorDistance2.getDistance(DistanceUnit.INCH) > floor - 5){
+
+
+
+
+                //if there is not a block in front of the intake
+                if (moveon = true){
+
+                    robot.SensorArm.setPosition(0);
+                    //if there is not a block touching the sensor
+                    if (!robot.armsensor.isPressed()){
+                        robot.backleftMotor.setPower(-0.25);
+                        robot.backrightMotor.setPower(0.25);
+                        robot.frontleftMotor.setPower(-0.25);
+                        robot.frontrightMotor.setPower(0.25);
+                    }
+
+                    //if there is a block touching the sensor
+                    else if (robot.armsensor.isPressed()){
+                        //jump to grabbing a block
+                        foundblock = true;
+                        moveon = false;
+                    }
+
+                }
+
+                //if there is a block in front of the intake
+                if (foundblock = true){
+                    StrafeLeft(10);
+                    robot.intakeright.setPower(-0.75);
+
+                    DriveEncoder(0.25,-20,0.25,-20);
+                }
+
+
+
+            }
+            //if we do have the block stop all motors
+            DriveEncoder(0.25,20,0.25,20);
+            robot.intakeright.setPower(0);
+            robot.backleftMotor.setPower(0);
+            robot.backrightMotor.setPower(0);
+            robot.frontleftMotor.setPower(0);
+            robot.frontrightMotor.setPower(0);
+            robot.SensorArm.setPosition(0.85);
+
+            //return to the last position
+            DriveEncoder(0.25, posL,0.25, posR);
+            DriveEncoder(0.25,40,0.25,40);
+            DriveEncoder(0.25,100,0.25,-100);
+
             robot.backleftMotor.setPower(-0.5);
             robot.backrightMotor.setPower(-0.5);
             robot.frontleftMotor.setPower(-0.5);
             robot.frontrightMotor.setPower(-0.5);
-            sleep(1000);
-            robot.intakeright.setPower(.75);
-            sleep(500);
+            sleep(750);
+            robot.intakeright.setPower(0.75);
             //back out
             DriveEncoder(.25,21,.25,21);
+
 
 
         }
 
         if (vuMark == RelicRecoveryVuMark.CENTER) {
 
+            foundblock = false;
+
             telemetry.addData("Status","Going Center");
             //forward
             DriveEncoder(.25,  90, .25, 90);
             //turn left
-            DriveEncoder(.25, -45, .25, 45);
+            DriveEncoder(.25, -48, .25, 48);
 
             //forward
             robot.backleftMotor.setPower(-0.5);
@@ -406,35 +479,92 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
             robot.intakeright.setPower(.75);
             sleep(500);
             //back out
-            DriveEncoder(.25, 16, .25, 16);
+            DriveEncoder(.25, 40, .25, 40);
 
 
             DriveEncoder(0.35,-100,0.35,100);
-            robot.lift.setPower(0.5);
-            sleep(500);
+        //    robot.lift.setPower(-0.5);
+        //    sleep(300);
             robot.frontclaw.setPosition(0.01);
             robot.backclaw.setPosition(0.99);
             robot.bigclaw.setPosition(0.99);
             robot.intakeright.setPower(-0.75);
-            DriveEncoder(0.25,-35,0.25,-35);
-            robot.lift.setPower(-0.25);
-            sleep(250);
-            robot.frontclaw.setPosition(0.99);
-            robot.backclaw.setPosition(0.01);
-            robot.bigclaw.setPosition(0.01);
+            DriveEncoder(0.25,-50,0.25,-50);
             DriveEncoder(0.35,-100,0.35,100);
+            DriveEncoder(0.35,-40,0.35,-40);
+
+            //set a recal point
+            final int posL = robot.backleftMotor.getCurrentPosition();
+            final int posR = robot.frontrightMotor.getCurrentPosition();
+
+            //SECOND BLOCK
+            double floor = sensorDistance2.getDistance(DistanceUnit.INCH);
+
+
+            //no block in intake
+            if (sensorDistance2.getDistance(DistanceUnit.INCH) > floor - 5){
+
+
+
+
+                //if there is not a block in front of the intake
+                if (moveon = true){
+
+                    robot.SensorArm.setPosition(0);
+                    //if there is not a block touching the sensor
+                    if (robot.armsensor.equals(false)){
+                        robot.backleftMotor.setPower(-0.25);
+                        robot.backrightMotor.setPower(0.25);
+                        robot.frontleftMotor.setPower(-0.25);
+                        robot.frontrightMotor.setPower(0.25);
+                    }
+
+                    //if there is a block touching the sensor
+                    else if (robot.armsensor.equals(true)){
+                        //jump to grabbing a block
+                        foundblock = true;
+                        moveon = false;
+                    }
+
+                }
+                //if there is a block in front of the intake
+                if (foundblock == true){
+                    StrafeLeft(10);
+                    robot.intakeright.setPower(-0.75);
+
+                    DriveEncoder(0.25,-20,0.25,-20);
+                }
+
+
+
+            }
+            //if we do have the block stop all motors
+            DriveEncoder(0.25,20,0.25,20);
+            robot.intakeright.setPower(0);
+            robot.backleftMotor.setPower(0);
+            robot.backrightMotor.setPower(0);
+            robot.frontleftMotor.setPower(0);
+            robot.frontrightMotor.setPower(0);
+            robot.SensorArm.setPosition(0.85);
+
+            DriveEncoder(0.25, posL,0.25, posR);
+            DriveEncoder(0.25,40,0.25,40);
+            DriveEncoder(0.25,100,0.25,-100);
+
             robot.backleftMotor.setPower(-0.5);
             robot.backrightMotor.setPower(-0.5);
             robot.frontleftMotor.setPower(-0.5);
             robot.frontrightMotor.setPower(-0.5);
-            sleep(1000);
-            robot.intakeright.setPower(.75);
-            sleep(500);
+            sleep(750);
+            robot.intakeright.setPower(0.75);
             //back out
             DriveEncoder(.25,21,.25,21);
+
         }
 
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
+            foundblock = false;
+
             telemetry.addData("Status","Going RIGHT");
             //forward
             DriveEncoder(.25, 100, .25, 100);
@@ -450,28 +580,74 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
             sleep(500);
             //back out
             DriveEncoder(.25, 25, .25, 25);
+            robot.intakeright.setPower(0);
+            DriveEncoder(0.35,-100,0.35,100);
+            DriveEncoder(0.35,-40,0.35,-40);
 
-            DriveEncoder(0.35,-100,0.35,100);
-            robot.lift.setPower(0.5);
-            sleep(500);
-            robot.frontclaw.setPosition(0.01);
-            robot.backclaw.setPosition(0.99);
-            robot.bigclaw.setPosition(0.99);
-            robot.intakeright.setPower(-0.75);
-            DriveEncoder(0.25,-35,0.25,-35);
-            robot.lift.setPower(-0.25);
-            sleep(250);
-            robot.frontclaw.setPosition(0.99);
-            robot.backclaw.setPosition(0.01);
-            robot.bigclaw.setPosition(0.01);
-            DriveEncoder(0.35,-100,0.35,100);
+            //set a recal point
+            final int posL = robot.backleftMotor.getCurrentPosition();
+            final int posR = robot.frontrightMotor.getCurrentPosition();
+
+
+            //SECOND BLOCK
+            double floor = sensorDistance2.getDistance(DistanceUnit.INCH);
+
+            //no block in intake
+            if (sensorDistance2.getDistance(DistanceUnit.INCH) > floor - 5){
+
+
+
+
+                //if there is not a block in front of the intake
+                if (moveon = false){
+
+                    robot.SensorArm.setPosition(0);
+                    //if there is not a block touching the sensor
+                    if (robot.armsensor.equals(false)){
+                        robot.backleftMotor.setPower(-0.25);
+                        robot.backrightMotor.setPower(0.25);
+                        robot.frontleftMotor.setPower(-0.25);
+                        robot.frontrightMotor.setPower(0.25);
+                    }
+
+                    //if there is a block touching the sensor
+                    else if (robot.armsensor.equals(true)){
+                        //jump to grabbing a block
+                        foundblock = true;
+                        moveon = false;
+                    }
+
+                }
+
+                //if there is a block in front of the intake
+                if (foundblock = true){
+                    StrafeLeft(10);
+                    robot.intakeright.setPower(-0.75);
+
+                    DriveEncoder(0.25,-20,0.25,-20);
+                }
+
+            }
+            //if we do have the block stop all motors
+            DriveEncoder(0.25,20,0.25,20);
+            robot.intakeright.setPower(0);
+            robot.backleftMotor.setPower(0);
+            robot.backrightMotor.setPower(0);
+            robot.frontleftMotor.setPower(0);
+            robot.frontrightMotor.setPower(0);
+            robot.SensorArm.setPosition(0.85);
+
+
+            DriveEncoder(0.25, posL,0.25, posR);
+            DriveEncoder(0.25,40,0.25,40);
+            DriveEncoder(0.25,100,0.25,-100);
+
             robot.backleftMotor.setPower(-0.5);
             robot.backrightMotor.setPower(-0.5);
             robot.frontleftMotor.setPower(-0.5);
             robot.frontrightMotor.setPower(-0.5);
-            sleep(1000);
-            robot.intakeright.setPower(.75);
-            sleep(500);
+            sleep(750);
+            robot.intakeright.setPower(0.75);
             //back out
             DriveEncoder(.25,21,.25,21);
 
@@ -489,9 +665,60 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
         sleep(500);
     }
 
+    public void BlockSearch(){
+       double floor = sensorDistance2.getDistance(DistanceUnit.INCH);
+       int foundblock = 0;
+       int moveon = 0;
+
+        //no block in intake
+        if (sensorDistance2.getDistance(DistanceUnit.INCH) > floor - 5){
+
+
+            //if there is a block in front of the intake
+            if (foundblock == 1){
+                StrafeLeft(10);
+                robot.intakeright.setPower(-0.75);
+
+                DriveEncoder(0.25,-20,0.25,-20);
+            }
+
+            //if there is not a block in front of the intake
+            if (moveon == 0){
+
+            robot.SensorArm.setPosition(0);
+            //if there is not a block touching the sensor
+            if (robot.armsensor.equals(false)){
+                robot.backleftMotor.setPower(-0.25);
+                robot.backrightMotor.setPower(0.25);
+                robot.frontleftMotor.setPower(-0.25);
+                robot.frontrightMotor.setPower(0.25);
+            }
+
+            //if there is a block touching the sensor
+            else if (robot.armsensor.equals(true)){
+                //jump to grabbing a block
+                foundblock = 1;
+            }
+
+        }
+
+
+    }
+    //if we do have the block stop all motors
+        DriveEncoder(0.25,20,0.25,20);
+        robot.intakeright.setPower(0);
+        robot.backleftMotor.setPower(0);
+        robot.backrightMotor.setPower(0);
+        robot.frontleftMotor.setPower(0);
+        robot.frontrightMotor.setPower(0);
+        robot.SensorArm.setPosition(0.85);
+
+}
+
 
 
     public void DrivePower (double leftpower, double rightpower){
+
 
         robot.frontrightMotor.setPower(rightpower);
         robot.backrightMotor.setPower(rightpower);
@@ -501,7 +728,44 @@ public class Jewel_Auto_Blue_With_Encoder_Dual_Block extends LinearOpMode {
     }
 
 
+    public void StrafeLeft (int distance){
 
+
+        //sets the encoder values to zero
+        robot.frontrightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backrightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontleftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backleftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //sets the position(distance) to drive to
+        robot.frontrightMotor.setTargetPosition(distance * 24);
+        robot.backrightMotor.setTargetPosition(-distance * 24);
+        robot.frontleftMotor.setTargetPosition(distance * 24);
+        robot.backleftMotor.setTargetPosition(-distance * 24);
+
+        //engages the encoders to start tracking revolutions of the motor axel
+        robot.frontrightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backrightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontleftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backleftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //powers up the left and right side of the drivetrain independently
+        DrivePower(0.25, 0.25);
+
+        //will pause the program until the motors have run to the previously specified position
+        while (robot.frontrightMotor.isBusy() && robot.backrightMotor.isBusy() &&
+                robot.frontleftMotor.isBusy() && robot.backleftMotor.isBusy())
+        {
+
+        }
+
+        //stops the motors and sets them back to normal operation mode
+        DriveStop();
+        robot.frontrightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backrightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontleftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backleftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
     //Stops all motors in the drivetrain
     public void DriveStop (){
         DrivePower(0,0);

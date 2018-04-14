@@ -2,11 +2,16 @@ package org.firstinspires.ftc.teamcode;
 
 import android.hardware.Sensor;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 
 public class CompetitionHWsetup
 {
@@ -29,9 +34,12 @@ public class CompetitionHWsetup
     public Servo    jewelarm = null;
     public Servo    jewelTwist = null;
     public Servo    relicclaw    = null;
+    public Servo    SensorArm = null;
 
 
     public Sensor color_sensor = null;
+    //public AnalogInput armsensor = null;
+    public TouchSensor armsensor = null;
 
 
     /* local OpMode members. */
@@ -59,6 +67,7 @@ public class CompetitionHWsetup
         lift        = hwMap.dcMotor.get("lift_motor");
         intakeright = hwMap.dcMotor.get("intake_right");
         relicarm    = hwMap.dcMotor.get("relicarm");
+
 
 
 
@@ -116,14 +125,18 @@ public class CompetitionHWsetup
         jewelarm = hwMap.get(Servo.class, "barney");
         jewelTwist = hwMap.get(Servo.class, "jeweltwist");
         relicclaw   = hwMap.get(Servo.class, "relicclaw");
+        SensorArm   =hwMap.get(Servo.class, "sensorarm");
 
 
         bigclaw.setPosition(0.5);
         frontclaw.setPosition(0.0);
-        backclaw.setPosition(0.7);
+        backclaw.setPosition(0.5);
         relicclaw.setPosition(1);
+        SensorArm.setPosition(0.9);
 
         
+
+        armsensor = hwMap.get(TouchSensor.class, "armsensor");
 
 
 
