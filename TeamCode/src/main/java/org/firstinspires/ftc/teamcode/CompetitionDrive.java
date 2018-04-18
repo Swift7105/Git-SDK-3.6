@@ -198,7 +198,6 @@ public class CompetitionDrive extends OpMode{
             robot.relicarm.setPower(-1);
 
         }
-
         else {
             robot.relicarm.setPower(0);
         }
@@ -222,6 +221,9 @@ public class CompetitionDrive extends OpMode{
         }
         if (gamepad2.left_bumper){
             robot.relicclaw.setPosition(0.8);
+        }
+        if (gamepad2.dpad_right){
+            robot.relicclaw.setPosition(1);
         }
 
 /*
